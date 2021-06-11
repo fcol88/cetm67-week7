@@ -15,8 +15,11 @@ tasks = {}
 
 ## Require a task to be specified
 AddTask_Post_Args = reqparse.RequestParser()
-AddTask_Post_Args.add_argument("task", type=str, help="A description of a task", required=True)
-AddTask_Post_Args.add_argument("completed", type=bool, help="Describes whether the task has been completed", required=True)
+AddTask_Post_Args.add_argument("description", type=str, help="A description of a task", required=True)
+AddTask_Post_Args.add_argument("completed", type=bool, help="Provide a value on whether the task has been completed: True or False", required=True)
+
+UpdateTask_Patch_Args = reqparse.RequestParser()
+UpdateTask_Patch_Args.add_argument("completed", type=bool, help="A value to update the task status to", required=True)
 
 ## Route to return API version ##
 class GetVersion(Resource):
@@ -28,11 +31,17 @@ class AddTask(Resource):
         args = AddTask_Post_Args.parse_args()
         id = str(uuid.uuid4())
         tasks[id] = args
-        print(tasks)
-        return tasks[id]
+        return {"taskId": id, "task": tasks[id]}
+
+class UpdateTask(Resource):
+    def patch(self, id):
+        args = UpdateTask_Patch_Args.parse_args()
+        tasks[id]['completed'] = args['completed']
+        return {"taskId" : id, "task" : tasks[id]}
 
 api.add_resource(GetVersion, '/version')
 api.add_resource(AddTask, '/tasks/add')
+api.add_resource(UpdateTask, '/tasks/update/<string:id>')
 
 if __name__ == "__main__":
     app.run(debug=True)
