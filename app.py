@@ -6,6 +6,11 @@ from flask import Flask, request
 from flask_restful import Api, Resource, reqparse
 import uuid
 
+import boto3
+
+## creating s3 client
+s3 = boto3.client('s3')
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -43,10 +48,20 @@ class ListTasks(Resource):
     def get(self):
         return tasks
 
+class HiFromJeff(Resource):
+    def get(self):
+        try:
+            ## The bucket is public so this may work elsewhere...
+            s3.download_file('bh84jm-week7-flaskapp-bucket', 'hifromaws.jpeg', 'hifromaws.jpeg')
+            return {"imagedownloaded" : "true"}, 200
+        except:
+            return {"imagedownloaded" : "false"}, 404
+
 api.add_resource(GetVersion, '/version')
 api.add_resource(AddTask, '/tasks/add')
 api.add_resource(UpdateTask, '/tasks/update/<string:id>')
 api.add_resource(ListTasks, '/tasks/')
+api.add_resource(HiFromJeff, '/downloadimage')
 
 if __name__ == "__main__":
     app.run(debug=True)

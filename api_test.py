@@ -33,3 +33,8 @@ response = requests.get(BASE_URL + "tasks/")
 print_response(response)
 ## expected that one task will be displayed as complete
 
+print("Downloading image...")
+response = requests.get(BASE_URL + "downloadimage")
+print_response(response)
+## expected that image is downloaded - may return false without credentials though
+
