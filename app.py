@@ -39,9 +39,14 @@ class UpdateTask(Resource):
         tasks[id]['completed'] = args['completed']
         return {"taskId" : id, "task" : tasks[id]}
 
+class ListTasks(Resource):
+    def get(self):
+        return tasks
+
 api.add_resource(GetVersion, '/version')
 api.add_resource(AddTask, '/tasks/add')
 api.add_resource(UpdateTask, '/tasks/update/<string:id>')
+api.add_resource(ListTasks, '/tasks/')
 
 if __name__ == "__main__":
     app.run(debug=True)

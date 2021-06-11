@@ -10,9 +10,26 @@ def print_response(response):
     print(response.status_code,
      f"\n{response.json()}")
 
-response = requests.post(BASE_URL + "/tasks/add", json = {"description" : "Add a task", "completed" : False})
+print("Checking version...")
+response = requests.get(BASE_URL + "version")
+print_response(response)
+
+print("Creating task...")
+response = requests.post(BASE_URL + "tasks/add", json = {"description" : "Test my API", "completed" : False})
 print_response(response)
 id = response.json()['taskId']
 
+print("Getting task list...")
+response = requests.get(BASE_URL + "tasks/")
+print_response(response)
+## expected that one task will be displayed as incomplete
+
+print("Updating task...")
 response = requests.patch(BASE_URL + "tasks/update/" + id, json = {"completed":True})
 print_response(response)
+
+print("Validating that task list is updated...")
+response = requests.get(BASE_URL + "tasks/")
+print_response(response)
+## expected that one task will be displayed as complete
+
