@@ -38,3 +38,12 @@ response = requests.get(BASE_URL + "downloadimage")
 print_response(response)
 ## expected that image is downloaded - may return false without credentials though
 
+print("Unsuccessful task request")
+response = requests.post(BASE_URL + "tasks/add")
+print_response(response)
+
+print("Unsuccessful task patch")
+response = requests.patch(BASE_URL + "tasks/update/", json = {"completed":True})
+
+print(BASE_URL + "Wrong method post")
+response = requests.post(BASE_URL + "tasks/")
